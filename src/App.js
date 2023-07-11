@@ -1,11 +1,43 @@
 import Button from "./Button";
+import { GoBell, GoBug, GoGoal  } from "react-icons/go";
 
 function App() {
-  return <div>
-    <Button primary rounded outline>Hi</Button>
-    <Button danger outline>it</Button>
-    <Button warning rouunded>me</Button>
-  </div>
+  const handleClick = () => {
+    alert("Hello");
+  };
+  return (
+    <div>
+      <div>
+        <Button success rounded outline onClick={handleClick}>
+          <GoBell />
+          Hi
+        </Button>
+      </div>
+      <div>
+        <Button danger outline>
+        <GoBug />
+          it
+        </Button>
+      </div>
+      <div>
+        <Button secondary rounded>
+          me
+        </Button>
+      </div>
+      <div>
+        <Button warning>
+        <GoGoal/>
+          me
+        </Button>
+      </div>
+      <div>
+        <Button secondary outline>
+
+          me
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export default App;
