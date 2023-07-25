@@ -3,7 +3,7 @@ import { GoBell, GoBug, GoGoal  } from "react-icons/go";
 
 function ButtonPage() {
   const handleClick = () => {
-    alert("Hello");
+
   };
   return (
     <div>
