@@ -1,4 +1,4 @@
-import Table from "../components/Table";
+import SortableTable from "../components/SortableTable";
 
 function TablePage() {
   const data =[
@@ -8,10 +8,29 @@ function TablePage() {
     { name: "Lime", color: "bg-green-500", score: 5 },
   ]
 
+  const config = [
+    { label: "Name",
+      render: (fruit) => fruit.name,
+      sortValue: (fruit) => fruit.name,
+  },
+    { label: "Color",
+      render: (fruit) => <div className={`w-6 h-6 rounded-full ${fruit.color}`}></div>,
+  },
+    { label: "Score",
+      render: (fruit) => fruit.score,
+      // Inside sortabletable
+      sortValue: (fruit) => fruit.score,
+    },
+  ];
+
+  const keyFn = (fruit) => {
+    return fruit.name
+  };
+
 
   return (
     <div>
-      <Table data={data}/>
+      <SortableTable data={data} config={config} keyFn={keyFn} />
     </div>
   );
 }

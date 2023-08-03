@@ -1,14 +1,26 @@
+import { Fragment }from "react";
 
+function Table({ data, config, keyFn }) {
+  const renderedHeaders = config.map((column, index) => {
+    if (column.header) {
+      return <Fragment key={`header-${index}`}>{column.header()}</Fragment>;
+    }
 
-function Table({ data }) {
-  const renderedRows = data.map((object) => {
-    return (
-      <tr className="border-b" key={object.name}>
-        <td className="p-3">{object.name}</td>
-        <td className="p-3">
-          <div className={`p-3 m-2 ${object.color}`}></div>
+    return <th key={`header-${index}`}>{column.label}</th>;
+  });
+
+  const renderedRows = data.map((rowData, index) => {
+    const renderedCells = config.map((column, columnIndex) => {
+      return (
+        <td className="p-3" key={`cell-${index}-${columnIndex}`}>
+          {column.render(rowData)}
         </td>
-        <td className="p-3">{object.score}</td>
+      );
+    });
+
+    return (
+      <tr className="border-b" key={`row-${index}-${keyFn(rowData)}`}>
+        {renderedCells}
       </tr>
     );
   });
@@ -17,14 +29,10 @@ function Table({ data }) {
     <table className="table-auto border-spacing-2">
       <thead>
         <tr className="border-b-2">
-          <th>Fruit</th>
-          <th>Color</th>
-          <th>Score</th>
+          {renderedHeaders}
         </tr>
       </thead>
-      <tbody>
-        {renderedRows}
-      </tbody>
+      <tbody>{renderedRows}</tbody>
     </table>
   );
 }
