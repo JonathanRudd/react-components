@@ -1,34 +1,73 @@
-import { useState } from "react";
-import Button from "../components/Button";
-import Panel from "../components/Panel";
-// import useCounter from '../hooks/use-counter';
+import {produce} from "immer"; // 1. Fixed import statement for "produce"
+import { useReducer } from "react"; // 2. Fixed import statement for "useReducer"
+import Button from "../components/Button"; // 3. Fixed import statement for Button component
+import Panel from "../components/Panel"; // 3. Fixed import statement for Panel component
+
+
+const INCREMENT_COUNT = "increment";
+const CHANGE_VALUE_TO_ADD = "change-value-to-add";
+const DECREMENT_COUNT = "decrement";
+const ADD_TO_COUNT = "add-to-count";
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case INCREMENT_COUNT:
+      state.count = state.count + 1;
+      return;
+    case DECREMENT_COUNT:
+      state.count = state.count - 1;
+      return;
+    case CHANGE_VALUE_TO_ADD:
+      state.valueToAdd = action.payload;
+      return;
+    case ADD_TO_COUNT:
+      state.count = state.count + state.valueToAdd;
+      state.valueToAdd = 0;
+      return;
+    default:
+      return;
+  }
+};
 
 function CounterPage({ initialCount }) {
-  const [count, setCount] = useState(initialCount);
-  const [valueToAdd, setValueToAdd] = useState(0);
+  // const [count, setCount] = useState(initialCount);
+  // const [valueToAdd, setValueToAdd] = useState(0);
+  const [state, dispatch] = useReducer(produce(reducer), {
+    count: initialCount,
+    valueToAdd: 0,
+  });
 
   const increment = () => {
-    setCount(count + 1);
+    dispatch({
+      type: INCREMENT_COUNT,
+    });
   };
 
   const decrement = () => {
-    setCount(count - 1);
+    dispatch({
+      type: DECREMENT_COUNT,
+    });
   };
 
   const handleChange = (event) => {
     const value = parseInt(event.target.value) || 0;
 
-    setValueToAdd(value);
+    dispatch({
+      type: CHANGE_VALUE_TO_ADD,
+      payload: value,
+    });
   };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    setCount(count + valueToAdd);
-    setValueToAdd(0);
+    dispatch({
+      type: ADD_TO_COUNT,
+    });
   };
 
   return (
     <Panel className="m-3">
-      <h1 className="text-lg">Count is {count}</h1>
+      <h1 className="text-lg">Count is {state.count}</h1>
       <div className="flex flex-row">
         <Button onClick={increment}>Increment</Button>
         <Button onClick={decrement}>Decrement</Button>
@@ -37,7 +76,7 @@ function CounterPage({ initialCount }) {
       <form onSubmit={handleSubmit} className="flex flex-col">
         <label className="text-lg">Add in bulk</label>
         <input
-          value={valueToAdd || ""}
+          value={state.valueToAdd || ""}
           onChange={handleChange}
           className="p-1 m-3 bg-gray-50 border border-gray-300"
           type="number"
